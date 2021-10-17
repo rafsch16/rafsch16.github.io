@@ -48,7 +48,7 @@ margin-right: auto;
     <img src="\images\features_price.png" />
 </div>
 
-<p>Next, I wanted the see if dogs and cats on the property can indicate lodging prices. Here, a linkage is much less obvious than for variables like the number of bedrooms. The analysis surprisingly reveals a cat-dog polarity. Whereas dogs are weak positive indicators (coefficient = 0.6), cats clearly are negative indicators for price (coefficient: -11.3).</p>
+<p>Next, I wanted the see if dogs and cats on the property can indicate lodging prices. Here, a linkage is much less obvious than for variables like the number of bedrooms. The analysis surprisingly reveals a cat-dog polarity. Whereas dogs are weak positive indicators (coefficient = 0.6), cats clearly are negative indicators for price (coefficient = -11.3).</p>
 
 <div id="img2">
     <img src="\images\dogs_cats_price.png" />
