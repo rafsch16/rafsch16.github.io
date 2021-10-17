@@ -21,7 +21,7 @@
 title: DataScience Blog Posts
 email: rafael.schoch84@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  On this webpage you can find several blog posts related to DataScience projects available on
+  On this webpage you can find blog posts related to DataScience projects available on
   my GitHub page.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
