@@ -298,7 +298,7 @@ The steps for finding the best estimator are as follows:
 <p>As outlined above, a Mann-Whitney U test was performed to find statistical differences in the customers and general population datasets. The head of the resulting DataFrame with ascending p-values and corresponding attributes is shown in the figure below.</p>
 
 <div id="img2">
-    <img src="\images\p_vals.png" />
+    <img src="\images\p_vals.jpg" />
 </div>
 
 <p1><b>Figure 2.</b> DataFrame with sorted attributes. The attributes are sorted with ascending p-values, ranking them according to their statistical difference between the two datasets.</p1>
