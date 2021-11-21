@@ -181,7 +181,10 @@ class Scaler(BaseEstimator, TransformerMixin):
 {% highlight ruby %}
 def build_model():
     '''
-    This function builds the ML model.
+    This function builds the ML model using the following steps:
+    1. Create pipline object using a list of (key, value) pairs
+    2. Create dictinary of parameters to be optimized
+    3. Create GridSearchCV object
     
     INPUT
     None
@@ -217,7 +220,13 @@ def build_model():
 {% highlight ruby %}
 def main():
     '''
-    This function finds the best model.
+    This function finds the best model using the folowing steps:
+    1. Load explanatory and response variables
+    2. Perform a loop for an increasing number of features
+    3. Clean the explanatory variables
+    3. Split the data in train and test datasets
+    4. Train model and predict on test dataset
+    5. Store the best estimator, parameters, number of features and AUC score
     
     INPUT
     None
