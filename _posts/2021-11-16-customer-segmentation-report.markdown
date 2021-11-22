@@ -148,17 +148,17 @@ def clean_df(df, customer_in = True, frac = 0.9):
 df['D19_KONSUMTYP'].replace(to_replace=9, value=float('nan'), inplace=True)
 {% endhighlight %}
 
+<p>An additional custom cleaning step was to convert numerical attributes that had no meaningful order into the dtype <i>object</i>. Therefore the <i>pandas.Series.astype( )</i> method was used.</p>
+
+{% highlight ruby %}
+df['D19_KONSUMTYP']=df['D19_KONSUMTYP'].astype('object', copy=False)
+{% endhighlight %}
+
 <p>To remove and store extra columns for customers data, the relevant attributes are simply selected and removed from the original DataFrame using the <i>pandas.DataFrame.drop( )</i> method.</p>
 
 {% highlight ruby %}
 df_extra = df[['CUSTOMER_GROUP', 'ONLINE_PURCHASE', 'PRODUCT_GROUP']]
 df_no_extra = df.drop(['CUSTOMER_GROUP', 'ONLINE_PURCHASE', 'PRODUCT_GROUP'], axis=1)
-{% endhighlight %}
-
-<p>An additional custom cleaning step was to convert numerical attributes that had no meaningful order into the dtype <i>object</i>. Therefore the <i>pandas.Series.astype( )</i> method was used.</p>
-
-{% highlight ruby %}
-df['D19_KONSUMTYP']=df['D19_KONSUMTYP'].astype('object', copy=False)
 {% endhighlight %}
 
 <p>In order to remove duplicated data, the <i>pandas.DataFrame.duplicated( )</i> method was used.</p>
