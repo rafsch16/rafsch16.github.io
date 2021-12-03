@@ -62,6 +62,12 @@ table.myFormat tr td { font-size: 13px; }
 p1 {
   font-size: 14px;
 }
+
+.custom {
+ font-family: Courier;
+ color: red;
+ font-size:16px;
+ }
 </style>
 </head>
 <body>
@@ -109,10 +115,10 @@ p1 {
 <h3>Methodology</h3>
 <h4>Data Preprocessing</h4> 
 
-<p>Before looking at how the customers and general population datasets relate, the customers and general population datasets were cleaned in several steps. Besides a custom cleaning step, this involved many standard procedures such as removing duplicated data, removing columns with no variability, removing columns with many <i>nan</i> values, parsing strings with digits into floats, extracting years from dates, and creating dummy variables for object type data. Generally, as many attributes as possible were kept, where after the cleaning steps a total of 600 attributes existed. The cleaning steps were implemented using the function 'clean_df', the docstring of this function is shown in the figure below.
+<p>Before looking at how the customers and general population datasets relate, the customers and general population datasets were cleaned in several steps. Besides a custom cleaning step, this involved many standard procedures such as removing duplicated data, removing columns with no variability, removing columns with many 'nan' values, parsing strings with digits into floats, extracting years from dates, and creating dummy variables for object type data. Generally, as many attributes as possible were kept, where after the cleaning steps a total of 600 attributes existed. The cleaning steps were implemented using the function <span class="custom">clean_df</span>, the docstring of this function is shown in the figure below.
 </p>
 
-{% highlight ruby %}
+{% highlight python %}
 def clean_df(df, customer_in = True, frac = 0.9):
     '''
     Function that applies cleaning steps:
@@ -140,52 +146,52 @@ def clean_df(df, customer_in = True, frac = 0.9):
 <br> 
 <br> 
 
-<p>To better understand the cleaning procedure, I will go through all the cleaning steps listed in the docstring, pointing out the relevant methods involved. The different cleaning steps were written as small modular functions, that were then mounted into the cleaning function 'clean_df'.</p>
+<p>To better understand the cleaning procedure, I will go through all the cleaning steps listed in the docstring, pointing out the relevant methods involved. The different cleaning steps were written as small modular functions, that were then mounted into the cleaning function <span class="custom">clean_df</span>.</p>
 
-<p>In the datasets, there are different values representing 'unknown' for the different attributes, such as 'X', 0, 9, or -1. In the custom cleaning step, I'm replacing those values with <i>nan</i> for individual attributes using the <i>pandas.Series.replace( )</i> method.</p>
+<p>In the datasets, there are different values representing 'unknown' for the different attributes, such as 'X', 0, 9, or -1. In the custom cleaning step, I'm replacing those values with 'nan' for individual attributes using the <span class="custom">pandas.Series.replace()</span> method.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 df['D19_KONSUMTYP'].replace(to_replace=9, value=float('nan'), inplace=True)
 {% endhighlight %}
 
-<p>An additional custom cleaning step was to convert numerical attributes that had no meaningful order into the dtype <i>object</i>. Therefore the <i>pandas.Series.astype( )</i> method was used.</p>
+<p>An additional custom cleaning step was to convert numerical attributes that had no meaningful order into the dtype <span class="custom">object</span>. Therefore the <span class="custom">pandas.Series.astype()</span> method was used.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 df['D19_KONSUMTYP']=df['D19_KONSUMTYP'].astype('object', copy=False)
 {% endhighlight %}
 
-<p>To remove and store extra columns for customers data, the relevant attributes are simply selected and removed from the original DataFrame using the <i>pandas.DataFrame.drop( )</i> method.</p>
+<p>To remove and store extra columns for customers data, the relevant attributes are simply selected and removed from the original DataFrame using the <span class="custom">pandas.DataFrame.drop()</span> method.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 df_extra = df[['CUSTOMER_GROUP', 'ONLINE_PURCHASE', 'PRODUCT_GROUP']]
 df_no_extra = df.drop(['CUSTOMER_GROUP', 'ONLINE_PURCHASE', 'PRODUCT_GROUP'], axis=1)
 {% endhighlight %}
 
-<p>In order to remove duplicated data, the <i>pandas.DataFrame.duplicated( )</i> method was used.</p>
+<p>In order to remove duplicated data, the <span class="custom">pandas.DataFrame.duplicated()</span> method was used.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 idx_duplicated = df.loc[df.duplicated()].index
 df_clean = df.drop(idx_duplicated, axis=0)
 {% endhighlight %}
 
-<p>For removing columns with greater than a fraction <i>frac</i> of <i>nan</i> values, the <i>pandas.DataFrame.isnull( )</i> method was central.</p>
+<p>For removing columns with greater than a fraction 'frac' of 'nan' values, the <span class="custom">pandas.DataFrame.isnull()</span> method was central.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 idx_cols = df.loc[:,df.isnull().sum(axis=0)>frac*df.shape[0]].columns
 df_clean=df.drop(idx_cols, axis=1)
 {% endhighlight %}
 
-<p>Attributes with no variability were identified using the <i>pandas.Series.value_counts( )</i> method and removed with the <i>pandas.DataFrame.drop( )</i> method.</p>
+<p>Attributes with no variability were identified using the <span class="custom">pandas.Series.value_counts()</span> method and removed with the <span class="custom">pandas.DataFrame.drop()</span> method.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 for col in df.columns:
     if df[col].value_counts().shape[0]==1:
         df.drop(columns=[col], axis=1, inplace=True)
 {% endhighlight %}
 
-<p>To parse strings with digits into floats, the Regular expression module (<i>re</i>) was used, by applying the <i>re.match( )</i> function to an input string <i>s</i>.</p>
+<p>To parse strings with digits into floats, the Regular expression module (<span class="custom">re</span>) was used, by applying the <span class="custom">re.match()</span> function to an input string 's'.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 p=re.match('\d+\.\d+$', str(s))
 d=re.match('\d+$', str(s))
 if p:
@@ -198,16 +204,16 @@ else:
     return s
 {% endhighlight %}
 
-<p>Extracting the year from a date was essentially another custom cleaning step, as there is only a single  attribute involved. To do so, the <i>pandas.to_datetime( )</i> method was used together with the key <i>year</i>.</p>
+<p>Extracting the year from a date was essentially another custom cleaning step, as there is only a single  attribute involved. To do so, the <span class="custom">pandas.to_datetime()</span> method was used together with the key <span class="custom">year</span>.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 df['EINGEFUEGT_AM']=df['EINGEFUEGT_AM'].apply(lambda x: pd.to_datetime(x).year 
                                                 if (x is not'NaN') else float('nan'))
 {% endhighlight %}
 
-<p>Finally, to handle categorical variables,  dtype <i>object</i> attributes were identified using the <i>pandas.DataFrame.select_dtypes( )</i> method and dummy variables were created using the method <i>pandas.get_dummies( )</i>.</p>
+<p>Finally, to handle categorical variables,  dtype <span class="custom">object</span> attributes were identified using the <span class="custom">pandas.DataFrame.select_dtypes()</span> method and dummy variables were created using the method <span class="custom">pandas.get_dummies()</span>.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 # get list of dtype object columns
 cat_cols_lst = df.select_dtypes(include= ['object']).columns
 # create DataFrame with dtype object columns
@@ -223,19 +229,19 @@ df = pd.concat([df, df_dummy], axis=1, join='inner')
 
 <h4>Implementation</h4> 
 
-<p>After data cleaning, I was ready to identify parts of the population that best describe the core customer base of the company. Therefore a Mann-Whitney U test was applied on each attribute of the customer and general population datasets. To do so, the <i>mannwhitneyu( )</i> function from the <i>scipy.stats</i> module was implemented.</p>
+<p>After data cleaning, I was ready to identify parts of the population that best describe the core customer base of the company. Therefore a Mann-Whitney U test was applied on each attribute of the customer and general population datasets. To do so, the <span class="custom">mannwhitneyu()</span> function from the <span class="custom">scipy.stats</span> module was implemented.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 p_val = stats.mannwhitneyu(x, y, alternative='two-sided')
 {% endhighlight %}
 
-<p>Here, <i>x</i> and <i>y</i> are the datasets to be tested. The resulting p-value allowed to sort the attributes according to their statistical difference.</p>
+<p>Here, 'x' and 'y' are the datasets to be tested. The resulting p-value allowed to sort the attributes according to their statistical difference.</p>
 
 <p>At this point the third dataset comes into play. It is the dataset from a previous marketing campaign that includes the same demographic information together with a response column, that states whether or not an individual has become a customer of the company. This dataset was used to train and test a supervised learning model, identifying potential customers.</p>
 
-<p>Therefore, a pipeline was used with a list of transforms and a final estimator, performing a grid search to optimize the hyperparameters of the model. This is based on scikit-learn's Pipeline and GridSearchCV classes. The full pipeline is as follows: Scaler, Imputer, Classifier. To be used in a pipeline, the Scaler was coded as a class with fit and transform methods. It can apply 'min-max' or 'standard' scaling, whereas scikit-learn's Imputer class can insert the 'mode' or the 'mean' of an attribute for missing values. The docstring of the Scaler class is shown below. Note that the Scaler class inherits from scikit-learn's BaseEstimator and TransformerMixin classes.</p>
+<p>Therefore, a pipeline was used with a list of transforms and a final estimator, performing a grid search to optimize the hyperparameters of the model. This is based on scikit-learn's <span class="custom">Pipeline</span> and <span class="custom">GridSearchCV</span> classes. The full pipeline is as follows: Scaler, Imputer, Classifier. To be used in a pipeline, the <span class="custom">Scaler</span> was coded as a class with <span class="custom">fit</span> and <span class="custom">transform</span> methods. It can apply 'min-max' or 'standard' scaling, whereas scikit-learn's <span class="custom">Imputer</span> class can insert the 'mode' or the 'mean' of an attribute for missing values. The docstring of the <span class="custom">Scaler</span> class is shown below. Note that the <span class="custom">Scaler</span> class inherits from scikit-learn's <span class="custom">BaseEstimator</span> and <span class="custom">TransformerMixin</span> classes.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 class Scaler(BaseEstimator, TransformerMixin):
     '''
     Scaling transform with min-max or standard scaling.
@@ -253,9 +259,9 @@ class Scaler(BaseEstimator, TransformerMixin):
 <br> 
 <br> 
 
-<p>Three different classifiers were tested: Logistic Regression, Random Forest <a href="#refs">[1]</a>, and Gradient Boosting <a href="#refs">[2]</a>. The Random Forest and Gradient Boosting classifiers are regularized using the parameter <i>min_weight_fraction_leaf</i>, indicating the minimum number of samples a leaf node must have (expressed as a fraction of the total number of instances). For Logistic Regression the parameter <i>C</i> is used with L2 regularization. Below the code for the Random Forest classifier model is shown.</p>
+<p>Three different classifiers were tested: Logistic Regression, Random Forest <a href="#refs">[1]</a>, and Gradient Boosting <a href="#refs">[2]</a>. The Random Forest and Gradient Boosting classifiers are regularized using the parameter <span class="custom">min_weight_fraction_leaf</span>, indicating the minimum number of samples a leaf node must have (expressed as a fraction of the total number of instances). For Logistic Regression the parameter <span class="custom">C</span> is used with L2 regularization. Below the code for the Random Forest classifier model is shown.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 def build_model():
     '''
     This function builds the ML model using the following steps:
@@ -292,9 +298,9 @@ def build_model():
 <br> 
 <br> 
 
-<p>Importantly, during the training of the model, we also optimize the data by including a different number <i>n</i> of features. The features included are always the <i>n</i> most significant features as obtained from the Mann-Whitney U test. As a metric for training we use ROC-AUC scoring. The code for finding the best estimator and the optimal number of features is shown below.</p>
+<p>Importantly, during the training of the model, we also optimize the data by including a different number <span class="custom">n</span> of features. The features included are always the 'n' most significant features as obtained from the Mann-Whitney U test. As a metric for training we use ROC-AUC scoring. The code for finding the best estimator and the optimal number of features is shown below.</p>
 
-{% highlight ruby %}
+{% highlight python %}
 def main():
     '''
     This function finds the best model using the folowing steps:
@@ -360,13 +366,13 @@ The steps for finding the best model are as follows:
 <ol>
   <li>Load explanatory and response variables.</li>
   <li>Perform a loop for an increasing number of features.</li>
-  <li>Clean the explanatory variables. The cleaning is similar to the cleaning in the preprocessing step but was implemented as a class with <i>fit</i> and <i>transform</i> methods.</li>
-  <li>Split the data in train and test datasets using scikit-learn's <i>train_test_split</i>.</li>
+  <li>Clean the explanatory variables. The cleaning is similar to the cleaning in the preprocessing step but was implemented as a class with <span class="custom">fit</span> and <span class="custom">transform</span> methods.</li>
+  <li>Split the data in train and test datasets using scikit-learn's <span class="custom">train_test_split</span>.</li>
   <li>Train model and predict on test dataset.</li>
   <li>Store the best estimator, parameters, number of features and AUC score.</li>
 </ol>
 
-<p>For the RandomForestClassifier example shown here, the final hyperparameters after tuning the model were: 'min_weight_fraction_leaf': 0.01, 'n_estimators': 100, 'num_features': 10, 'imputer__strategy': 'mean', 'scaler__mode': 'standard'.</p>
+<p>For the RandomForestClassifier example shown here, the final hyperparameters after tuning the model were: <span class="custom">min_weight_fraction_leaf</span>: 0.01, <span class="custom">n_estimators</span>: 100, <span class="custom">num_features</span>: 10, <span class="custom">imputer__strategy</span>: 'mean', <span class="custom">scaler__mode</span>: 'standard'.</p>
 
 <h4>Refinement</h4> 
 
@@ -374,11 +380,11 @@ The steps for finding the best model are as follows:
 
 <p>First, preprocessing of the data is very important. The data structure is diverse and requires custom cleaning steps, for instance, there are different values representing 'unknown' for the different attributes. Using digits for unknown values biases the statistical testing as well as the supervised learning. Additionally, not all of the categorical attributes have ordered categories and one-hot encoding should be used consequently for those categories.</p> 
 
-<p>Second, in order for the Mann-Whitney U test to perform properly, it is important to remove <i>nan</i> values as they will influence the testing. Also, the p-values decrease if the size of the datasets increase and will become zero at some point. In order to obtain non-zero p-values it was necessary to work with a subsample of the dataset. I initially also made the mistake to min-max scale the data before the test, which resulted in a biased test as the minimum and maximum values were sometimes different in the two datasets.</p> 
+<p>Second, in order for the Mann-Whitney U test to perform properly, it is important to remove <span class="custom">nan</span> values as they will influence the testing. Also, the p-values decrease if the size of the datasets increase and will become zero at some point. In order to obtain non-zero p-values it was necessary to work with a subsample of the dataset. I initially also made the mistake to 'min-max' scale the data before the test, which resulted in a biased test as the minimum and maximum values were sometimes different in the two datasets.</p> 
 
-<p>In the process of refinement it is very important to periodically print or visualize aspects of the data. The method <i>pandas.Series.value_counts( )</i> has proven to be very useful in this process.</p>
+<p>In the process of refinement it is very important to periodically print or visualize aspects of the data. The method <span class="custom">pandas.Series.value_counts()</span> has proven to be very useful in this process.</p>
 
-<p>I was also removing attributes with a fraction greater than <i>frac</i> of missing values. Different values of <i>frac</i> were tested. The supervised learning models however performed best when not removing too many attributes, such that <i>frac</i>=0.9 was used for the fine-tuning of the models.</p>
+<p>I was also removing attributes with a fraction greater than 'frac' of missing values. Different values of 'frac' were tested. The supervised learning models however performed best when not removing too many attributes, such that 'frac=0.9' was used for the fine-tuning of the models.</p>
 
 <p>Several classifiers were tested for the supervised learning part. Here it was important to regularize a classifier properly to avoid overfitting. To avoid data leakage the Scaler and Imputer classes should be part of the pipeline, such that they are only fit to the train set in each fold of cross-validation.</p>
 
@@ -458,7 +464,7 @@ The steps for finding the best model are as follows:
 
 <h4>Supervised Learning Model</h4> 
 
-<p>As outlined above, I use <i>n</i> of the top attributes from the Mann-Whitney U test to perform feature selection for the training of a model that can predict customers from demographic data. This is done on a dataset for the targets of a marketing campaign, that comes with a response column that states whether an individual has become a customer of the company. We find that the learning models perform best with <i>n</i>=10-22 features included out of a total of 600 features. Below the ROC curve is shown for the best estimator found for the Gradient Boosting classifier.</p>
+<p>As outlined above, I use 'n' of the top attributes from the Mann-Whitney U test to perform feature selection for the training of a model that can predict customers from demographic data. This is done on a dataset for the targets of a marketing campaign, that comes with a response column that states whether an individual has become a customer of the company. We find that the learning models perform best with 'n=10-22' features included out of a total of 600 features. Below the ROC curve is shown for the best estimator found for the Gradient Boosting classifier.</p>
 
 <div id="img4">
     <img src="\images\roc_curve_GB.png" />
@@ -509,7 +515,7 @@ The steps for finding the best model are as follows:
 <br> 
 <br> 
 
-<p>The estimator and hyperparameters found for the best model are shown in the table below. The hyperparameters were found using scikit-learn's GridSearchCV class with cross-validation.</p>
+<p>The estimator and hyperparameters found for the best model are shown in the table below. The hyperparameters were found using scikit-learn's <span class="custom">GridSearchCV</span> class with cross-validation.</p>
 
 <div id="table3">
 <table style="font-size: 14px;">
@@ -555,7 +561,7 @@ The steps for finding the best model are as follows:
 <h3>Conclusions</h3> 
 <h4>Reflection</h4> 
 
-<p>In this project I covered the full sequence of a typical Machine Learning project. After framing the problem, the data was explored by studying the characteristics of the attributes, such as dtypes, statistical measures, % of missing values, and using data visualizations. This was useful in determining the transforms to be applied to the data. Next, small modular cleaning functions were created, that could easily be mounted into the main cleaning function. A Man-Whitney U test was then used for identifying attributes that provide useful information. This also allowed to create a customer segmentation report. Several Machine Learning models were then tested and for the fine-tuning of the models, a different number of features was used as obtained from the Mann-Whitney U test. For the fine-tuning of the hyperparameters, scikit-learn's Pipeline and GridSearchCV classes were used with cross-validation and ROC-AUC scoring. A Scaling class was written that could integrate into the pipeline and allowed to tune the mode of data scaling. After determining the best estimator from cross-validation, the model was used to predict on a test dataset.</p>
+<p>In this project I covered the full sequence of a typical Machine Learning project. After framing the problem, the data was explored by studying the characteristics of the attributes, such as dtypes, statistical measures, % of missing values, and using data visualizations. This was useful in determining the transforms to be applied to the data. Next, small modular cleaning functions were created, that could easily be mounted into the main cleaning function. A Man-Whitney U test was then used for identifying attributes that provide useful information. This also allowed to create a customer segmentation report. Several Machine Learning models were then tested and for the fine-tuning of the models, a different number of features was used as obtained from the Mann-Whitney U test. For the fine-tuning of the hyperparameters, scikit-learn's <span class="custom">Pipeline</span> and <span class="custom">GridSearchCV</span> classes were used with cross-validation and ROC-AUC scoring. A Scaling class was written that could integrate into the pipeline and allowed to tune the mode of data scaling. After determining the best estimator from cross-validation, the model was used to predict on a test dataset.</p>
 
 <p>I have obtained a ROC-AUC score of 0.78 for the Gradient Boosting classifier. This score lies in between a perfect (AUC=1) and a random classifier (AUC=0.5). The Gradient Boosting classifier performs substantially better than the Logistic Regression classifier but only slightly better than the Random Forest classifier. The ROC-AUC metric is adequate for an imbalanced dataset where the positive class is rare. The project also reveals the importance of data preparation and selection. As there are many features in the dataset, it is important to perform feature selection using unsupervised learning techniques. The Mann-Whitney U test has proven to be capable of feature selection, while also allowing to get a statistical description of the customer base of the company. With the performance achieved here, the company may target 20% of the population in a marketing campaign and gain as many customers as targeting ~60% of the population randomly.</p>
 
@@ -567,7 +573,7 @@ The steps for finding the best model are as follows:
 
 <p>One possible improvement for predicting customers would be to further optimize the data cleaning steps. The data structure is very diverse and requires custom cleaning steps. This has largely been addressed but there may still be space for improvement.</p>
 
-<p>The Mann-Whitney U test performed here is only one possibility to obtain a reduced dataset, other techniques for feature selection or dimensionality reduction could be tested such as scikit-learn's SelectKBest or PCA, respectively. For the supervised learning, other techniques could be tested as well, such as XGBoost and LightGBM for classification. Additionally, one could try combining several models into a <a href="https://www.kaggle.com/arthurtok/introduction-to-ensembling-stacking-in-python">custom ensemble model</a>.</p>
+<p>The Mann-Whitney U test performed here is only one possibility to obtain a reduced dataset, other techniques for feature selection or dimensionality reduction could be tested such as scikit-learn's <span class="custom">SelectKBest</span> or <span class="custom">PCA</span>, respectively. For the supervised learning, other techniques could be tested as well, such as XGBoost and LightGBM for classification. Additionally, one could try combining several models into a <a href="https://www.kaggle.com/arthurtok/introduction-to-ensembling-stacking-in-python">custom ensemble model</a>.</p>
 
 <p>The training dataset is strongly imbalanced with the two classes not represented equally. There is only a tiny fraction (1.2%) of customers in the training dataset. In classification tasks this is not optimal, as good metric scores may be obtained by ignoring the minor class. One could therefore try to resample the dataset into several balanced subsets for better training. Additionally, due to the imbalance in the data, stratified splitting should be considered when creating train and test datasets.</p>
 
